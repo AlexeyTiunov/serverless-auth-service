@@ -33,7 +33,8 @@ export const basicAuthorizer = async (
     return "Unauthorized";
   }
   try {
-    const buff: Buffer = Buffer.from(authorizationToken, "base64");
+    const encodedCreds = authorizationToken.split(" ")[1];
+    const buff: Buffer = Buffer.from(encodedCreds, "base64");
     const plainCreds: Array<string> = buff.toString("utf-8").split(":");
     const [userName, password] = plainCreds;
 
