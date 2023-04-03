@@ -1,3 +1,47 @@
+## Task 7 
+What was done:
+
+### Task 7.1
+- Create a new service called authorization-service at the same level as Product and Import services with its own serverless.yml file. The backend project structure should look like this:
+backend-repository
+product-service
+import-service
+authorization-service
+- Create a lambda function called basicAuthorizer under the same Serverless config file (i.e. serverless.yaml) of the Authorization Service.
+This lambda should have at least one environment variable with the following credentials:
+```
+- {yours_github_account_login}=TEST_PASSWORD
+{yours_github_account_login} - your GitHub account name. Login for test user should be your GitHub account name
+TEST_PASSWORD - password string. Password for test user must be "TEST_PASSWORD"
+example: johndoe=TEST_PASSWOR
+```
+- This basicAuthorizer lambda should take Basic Authorization token, decode it and check that credentials provided by token exist in the lambda environment variable.
+- This lambda should return 403 HTTP status if access is denied for this user (invalid authorization_token) and 401 HTTP status if Authorization header is not provided.
+NOTE: Do not send your credentials to the GitHub. Use .env file and serverless-dotenv-plugin serverless plugin to add environment variables to the lambda. Add .env file to .gitignore file.
+```
+.env file example:
+vasiapupkin=TEST_PASSWORD
+```
+- see [master branch  function link](https://github.com/AlexeyTiunov/serverless-auth-service/blob/master/src/functions/basicAuthorizer/handler.ts)
+
+
+### Task 7.2
+- Add Lambda authorization to the /import path of the Import Service API Gateway.
+- Use your basicAuthorizer lambda as the Lambda authorizer
+- see [link for pull request, import service](https://github.com/AlexeyTiunov/serverless-import-service/pull/3)
+
+
+### Task 7.3
+- Request from the client application to the /import path of the Import Service should have Basic Authorization header:
+```
+- Authorization: Basic {authorization_token}
+- {authorization_token} is a base64-encoded {yours_github_account_login}:TEST_PASSWORD
+example: Authorization: Basic sGLzdRxvZmw0ZXs0UGFzcw==
+```
+- Client should get authorization_token value from browser localStorage
+const authorization_token = localStorage.getItem('authorization_token')
+- see [link fo FE pull request](https://github.com/AlexeyTiunov/shop-react-redux-cloudfront-ta/pull/3)
+
 # Serverless - AWS Node.js Typescript
 
 This project has been generated using the `aws-nodejs-typescript` template from the [Serverless framework](https://www.serverless.com/).
